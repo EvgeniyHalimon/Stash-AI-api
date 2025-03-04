@@ -1,9 +1,10 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 
 import { CorsMiddleware } from './shared/cors.middleware';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [],
+  imports: [DatabaseModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

@@ -26,8 +26,8 @@ async function bootstrap() {
   );
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Bred API')
-    .setDescription('The Bred API v1')
+    .setTitle('STASH-AI API')
+    .setDescription('The STASH-AI API v1')
     .setVersion('1.0')
     .addSecurity('bearer', {
       type: 'http',
