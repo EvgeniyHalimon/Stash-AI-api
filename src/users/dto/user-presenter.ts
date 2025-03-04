@@ -1,9 +1,6 @@
-// library
 import { ApiProperty } from '@nestjs/swagger';
 
-// schema
-import User from '../user.schema';
-import { UserRole } from '../user.types';
+import { IUser, UserRole } from '../user.types';
 
 export class UserPresenter {
   @ApiProperty({
@@ -11,7 +8,7 @@ export class UserPresenter {
     type: String,
     description: 'Represents id of the author',
   })
-  id: string;
+  _id: string;
 
   @ApiProperty({
     example: 'John',
@@ -35,26 +32,11 @@ export class UserPresenter {
   email: string;
 
   @ApiProperty({
-    example: 'A brief bio of the author',
-    type: String,
-    description: 'Represents bio of the author',
-  })
-  bio: string;
-
-  @ApiProperty({
     example: 'user',
     type: String,
     description: 'Represents the role of the author',
   })
   role: UserRole;
-
-  @ApiProperty({
-    example: null,
-    type: String,
-    nullable: true,
-    description: 'Represents the photo of the author',
-  })
-  photo: string | null;
 
   @ApiProperty({
     example: true,
@@ -78,14 +60,12 @@ export class UserPresenter {
   })
   updatedAt: Date;
 
-  constructor(user: User) {
-    this.id = user.id;
+  constructor(user: IUser) {
+    this._id = user._id;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.email = user.email;
-    this.bio = user.bio;
     this.role = user.role;
-    this.photo = user.photo;
     this.active = user.active;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;

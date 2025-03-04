@@ -62,20 +62,4 @@ export class CreateUserDto {
     example: 'qwertyui12345678',
   })
   readonly password: string;
-
-  @IsString()
-  @MinLengthWithMessage({ min: userFieldLengths.bio.min, property: 'Bio' })
-  @MaxLengthWithMessage({
-    max: userFieldLengths.bio.max,
-    property: 'Bio',
-  })
-  @ApiProperty({
-    type: String,
-    description: 'Bio of user',
-    required: true,
-    minLength: userFieldLengths.bio.min,
-    maxLength: userFieldLengths.bio.max,
-    example: 'Hello my name is Monty',
-  })
-  readonly bio: string;
 }

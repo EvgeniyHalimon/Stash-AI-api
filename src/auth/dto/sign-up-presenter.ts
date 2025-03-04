@@ -1,16 +1,14 @@
 import { UserPresenter } from 'src/users/dto';
-import User from 'src/users/user.schema';
+import { IUser } from 'src/users/user.types';
 
 export class SignUpPresenter extends UserPresenter {
-  constructor(user: User) {
+  constructor(user: IUser) {
     super(user);
-    this.id = user.id;
+    this._id = user._id;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.email = user.email;
-    this.bio = user.bio;
     this.role = user.role;
-    this.photo = user.photo;
     this.active = user.active;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;

@@ -1,30 +1,18 @@
-// nest
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 
-// module
 import { UsersModule } from 'src/users/user.module';
+import { DatabaseModule } from 'src/database/database.module';
 
-// controller
 import { AuthController } from './auth.controller';
 
-// service
 import { AuthService } from './auth.service';
 
-// schema
-import User from 'src/users/user.schema';
-
-// guard
 import { AuthGuard } from './guards/auth.guard';
 
 @Module({
-  imports: [
-    JwtModule.register({}),
-    UsersModule,
-    SequelizeModule.forFeature([User]),
-  ],
+  imports: [JwtModule.register({}), UsersModule, DatabaseModule],
   controllers: [AuthController],
   providers: [
     AuthService,

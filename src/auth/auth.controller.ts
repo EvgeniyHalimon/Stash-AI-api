@@ -90,7 +90,7 @@ export class AuthController {
 
   @Get('refresh')
   refresh(@Req() req: ICustomRequest): Promise<ITokens | void> {
-    return this.authService.refresh(req.user.id);
+    return this.authService.refresh(req.user._id);
   }
 
   @Get('confirm/:token')
