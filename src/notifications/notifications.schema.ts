@@ -7,6 +7,7 @@ const NotificationsSchema = new Schema<INotifications>({
   },
   user: { type: String, ref: 'User' },
   text: { type: String, required: true },
+  createdAt: { type: Date, default: () => new Date() },
 });
 
 export const Notification = mongoose.model<INotifications>(
