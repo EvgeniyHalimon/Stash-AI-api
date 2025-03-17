@@ -39,10 +39,7 @@ export class NotificationsService {
     return await this.notificationModel.deleteMany({ user });
   }
 
-  addViewToNotificationsByIds = async (
-    user: string,
-    notificationIds: string[],
-  ) => {
+  async addViewToNotificationsByIds(user: string, notificationIds: string[]) {
     const params = {
       _id: { $in: notificationIds },
       user,
@@ -55,7 +52,7 @@ export class NotificationsService {
     const result = await this.notificationModel.updateMany(params, data);
 
     return result;
-  };
+  }
 
   findOne(
     params: QueryOptions<Partial<CreateNotificationDto>>,
