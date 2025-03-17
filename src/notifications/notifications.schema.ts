@@ -7,6 +7,7 @@ const NotificationsSchema = new Schema<INotifications>({
   },
   user: { type: String, ref: 'User' },
   text: { type: String, required: true },
+  isViewed: { type: Boolean, default: false },
   createdAt: { type: Date, default: () => new Date() },
 });
 
