@@ -6,6 +6,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GoodsModule } from './goods/goods.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { GoodsModule } from './goods/goods.module';
     ScheduleModule.forRoot(),
     TasksModule,
     GoodsModule,
+    EventsModule,
   ],
 })
 export class AppModule {
