@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import { INotifications } from './notifications.types';
 
-const NotificationsSchema = new Schema<INotifications>({
+export const NotificationsSchema = new Schema<INotifications>({
   _id: {
     type: String,
   },

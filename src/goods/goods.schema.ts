@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import { IGoods } from './goods.types';
 
-const GoodsSchema = new Schema<IGoods>({
+export const GoodsSchema = new Schema<IGoods>({
   _id: {
     type: String,
   },

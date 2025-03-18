@@ -1,11 +1,14 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { IGoods } from './goods.types';
 import { Goods } from './goods.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class GoodsService {
-  constructor(@Inject(Goods.name) private readonly goodsModel: Model<IGoods>) {}
+  constructor(
+    @InjectModel(Goods.name) private readonly goodsModel: Model<IGoods>,
+  ) {}
 
   async create(goodsDto: Partial<IGoods>): Promise<IGoods> {
     const newGoods = new this.goodsModel(goodsDto);

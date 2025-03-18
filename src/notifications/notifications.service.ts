@@ -1,16 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Model, QueryOptions } from 'mongoose';
-
-import { modelsVocabulary } from 'src/shared';
 import { INotifications } from './notifications.types';
 import { CreateNotificationDto } from './dto';
-
-const { NOTIFICATION_MODEL } = modelsVocabulary;
+import { InjectModel } from '@nestjs/mongoose';
+import { Notification } from './notifications.schema';
 
 @Injectable()
 export class NotificationsService {
   constructor(
-    @Inject(NOTIFICATION_MODEL)
+    @InjectModel(Notification.name)
     private readonly notificationModel: Model<INotifications>,
   ) {}
 

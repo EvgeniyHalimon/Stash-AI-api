@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -17,18 +16,20 @@ import { hashPassword } from 'src/auth/utils/passwordUtils';
 
 import { IUser } from './user.types';
 
-import { vocabulary, modelsVocabulary } from 'src/shared';
+import { vocabulary } from 'src/shared';
 import { SignUpPresenter } from 'src/auth/dto';
+import { User } from './user.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 const {
   users: { USER_NOT_FOUND, EMAIL_IS_TAKEN },
 } = vocabulary;
 
-const { USER_MODEL } = modelsVocabulary;
-
 @Injectable()
 export class UsersService {
-  constructor(@Inject(USER_MODEL) private readonly userModel: Model<IUser>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<IUser>,
+  ) {}
 
   async findAll(): Promise<GetAllUserPresenter> {
     const users = await this.userModel.find();

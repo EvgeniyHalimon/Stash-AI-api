@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 import { IUser } from './user.types';
 import { UserRolesEnum } from './user.constants';
 
-const UserSchema = new Schema<IUser>({
+export const UserSchema = new Schema<IUser>({
   _id: {
     type: String,
   },
