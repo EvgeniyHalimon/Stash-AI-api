@@ -1,3 +1,4 @@
+import { OnModuleInit } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
@@ -14,9 +15,16 @@ import { Server } from 'socket.io';
     origin: '*',
   },
 })
-export class EventsGateway {
+export class EventsGateway implements OnModuleInit {
   @WebSocketServer()
   server: Server;
+
+  onModuleInit() {
+    this.server.on('connection', (socket) => {
+      console.log('🚀 ~ EventsGateway ~ this.server.on ~ socket:', socket.id);
+      console.log('Client connected');
+    });
+  }
 
   @SubscribeMessage('events')
   findAll(@MessageBody() data: any): Observable<WsResponse<number>> {
@@ -28,6 +36,7 @@ export class EventsGateway {
 
   @SubscribeMessage('identity')
   async identity(@MessageBody() data: number): Promise<number> {
+    console.log('🚀 ~ EventsGateway ~ identity ~ data:', data);
     return data;
   }
 }
