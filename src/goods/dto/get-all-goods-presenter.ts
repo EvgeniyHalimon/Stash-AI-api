@@ -1,15 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserPresenter } from './user-presenter';
-import { IUser } from '../user.types';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, Min, Max } from 'class-validator';
+import { GoodPresenter } from './good-presenter';
+import { IGoods } from '../goods.types';
 
-export class GetAllUserPresenter {
+export class GetAllGoodPresenter {
   @ApiProperty({
-    type: [UserPresenter],
+    type: [GoodPresenter],
     description: 'Represents array of users.',
   })
-  users: UserPresenter[];
+  users: GoodPresenter[];
 
   @ApiProperty({
     type: Number,
@@ -28,7 +28,7 @@ export class GetAllUserPresenter {
     default: 1,
     example: 1,
   })
-  readonly page: number;
+  readonly page?: number = 1;
 
   @IsNumber()
   @IsOptional()
@@ -41,10 +41,10 @@ export class GetAllUserPresenter {
     default: 10,
     example: 10,
   })
-  readonly limit: number;
+  readonly limit?: number = 10;
 
-  constructor(users: IUser[], count: number, page: number, limit: number) {
-    this.users = users.map((user) => new UserPresenter(user));
+  constructor(goods: IGoods[], count: number, page: number, limit: number) {
+    this.users = goods.map((user) => new GoodPresenter(user));
     this.count = count;
     this.page = page;
     this.limit = limit;

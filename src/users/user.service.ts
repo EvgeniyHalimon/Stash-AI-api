@@ -31,10 +31,18 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<IUser>,
   ) {}
 
-  async findAll(): Promise<GetAllUserPresenter> {
-    const users = await this.userModel.find();
+  async findAll(queryParams: any): Promise<GetAllUserPresenter> {
+    const { sort, sortBy, page = 1, limit = 10 } = queryParams;
+    const skip = (page - 1) * limit;
 
-    return new GetAllUserPresenter(users, users.length);
+    const sortOptions = {};
+    sortOptions[sortBy] = sort === 'asc' ? 1 : -1;
+    const [users, total] = await Promise.all([
+      this.userModel.find().sort(sortOptions).skip(skip).limit(limit).exec(),
+      this.userModel.countDocuments().exec(),
+    ]);
+
+    return new GetAllUserPresenter(users, total, page, limit);
   }
 
   async patch({

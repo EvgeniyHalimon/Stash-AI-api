@@ -10,11 +10,6 @@ export interface IGoods {
   updatedAt: Date;
 }
 
-export enum SortOrder {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
 export enum GoodsSortBy {
   TITLE = 'title',
   PRICE = 'price',

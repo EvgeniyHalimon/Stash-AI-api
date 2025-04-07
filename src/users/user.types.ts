@@ -14,3 +14,14 @@ export interface IUser extends Document {
 }
 
 export type UserRole = UserRolesEnum.USER | UserRolesEnum.ADMIN;
+
+export enum UserSortBy {
+  FIRST_NAME = 'firstName',
+  LAST_NAME = 'lastName',
+  EMAIL = 'email',
+  PASSWORD = 'password',
+  ROLE = 'role',
+  ACTIVE = 'active',
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+}

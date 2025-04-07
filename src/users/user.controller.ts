@@ -4,8 +4,8 @@ import {
   Get,
   HttpStatus,
   Patch,
+  Query,
   Req,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -13,11 +13,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 import { UsersService } from './user.service';
 
-import { GetAllUserPresenter, PatchUserDto, UserPresenter } from './dto';
+import {
+  GetAllUserPresenter,
+  GetAllUsersDto,
+  PatchUserDto,
+  UserPresenter,
+} from './dto';
 
 import { ICustomRequest, vocabulary } from 'src/shared';
 
@@ -36,8 +40,8 @@ export class UsersController {
     type: GetAllUserPresenter,
   })
   @Get('/')
-  findAll(): Promise<GetAllUserPresenter> {
-    return this.usersService.findAll();
+  findAll(@Query() query: GetAllUsersDto): Promise<GetAllUserPresenter> {
+    return this.usersService.findAll(query);
   }
 
   @ApiResponse({
@@ -61,7 +65,6 @@ export class UsersController {
       statusCode: HttpStatus.BAD_REQUEST,
     },
   })
-  @UseInterceptors(FileInterceptor('file'))
   @Patch('/')
   patch(
     @Body() updateUserDto: PatchUserDto,

@@ -1,10 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsNumber, Min, Max } from 'class-validator';
-import { GoodsSortBy } from '../goods.types';
+import { UserSortBy } from '../user.types';
 import { SortOrder } from 'src/shared';
 
-export class FindAllGoodsDto {
+export class GetAllUsersDto {
   @IsEnum(SortOrder)
   @IsOptional()
   @ApiPropertyOptional({
@@ -15,15 +15,15 @@ export class FindAllGoodsDto {
   })
   readonly sort?: SortOrder = SortOrder.ASC;
 
-  @IsEnum(GoodsSortBy)
+  @IsEnum(UserSortBy)
   @IsOptional()
   @ApiPropertyOptional({
-    enum: GoodsSortBy,
+    enum: UserSortBy,
     description: 'Field to sort by',
-    default: GoodsSortBy.CREATED_AT,
-    example: GoodsSortBy.PRICE,
+    default: UserSortBy.CREATED_AT,
+    example: UserSortBy.CREATED_AT,
   })
-  readonly sortBy?: GoodsSortBy = GoodsSortBy.CREATED_AT;
+  readonly sortBy?: UserSortBy.CREATED_AT;
 
   @IsNumber()
   @IsOptional()

@@ -11,3 +11,8 @@ export interface IError {
 export interface ICustomRequest extends Request {
   user: IUser;
 }
+
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}

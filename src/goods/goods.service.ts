@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { IGoods } from './goods.types';
 import { Goods } from './goods.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { FindAllGoodsDto } from './dto';
+import { FindAllGoodsDto, GetAllGoodPresenter } from './dto';
 
 @Injectable()
 export class GoodsService {
@@ -16,9 +16,7 @@ export class GoodsService {
     return await newGoods.save();
   }
 
-  async findAll(
-    queryParams: FindAllGoodsDto,
-  ): Promise<{ items: IGoods[]; total: number; page: number; limit: number }> {
+  async findAll(queryParams: FindAllGoodsDto): Promise<GetAllGoodPresenter> {
     const { sort, sortBy, page = 1, limit = 10 } = queryParams;
     const skip = (page - 1) * limit;
 
@@ -30,12 +28,7 @@ export class GoodsService {
       this.goodsModel.countDocuments().exec(),
     ]);
 
-    return {
-      items,
-      total,
-      page,
-      limit,
-    };
+    return new GetAllGoodPresenter(items, total, page, limit);
   }
 
   async findById(id: string): Promise<IGoods | null> {
