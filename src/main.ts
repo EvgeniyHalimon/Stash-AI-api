@@ -1,6 +1,7 @@
 // libraries
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 
@@ -8,15 +9,14 @@ import { config } from './config';
 
 import { CustomValidationPipe } from './shared/CustomValidationPipe';
 
-// exception filter
-//import { HttpExceptionFilter } from './filters/http-exception.filter';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
-  app.enableCors();
-  //remove before deploy
-  //app.useLogger(app.get(Logger));
-  //app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableCors({
+    origin: config.FE_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new CustomValidationPipe({
       whitelist: true,
@@ -24,6 +24,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // For detailed information, you need to go to https://helmetjs.github.io/
+  app.use(helmet());
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('STASH-AI API')
