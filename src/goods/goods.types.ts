@@ -9,3 +9,19 @@ export interface IGoods {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export enum GoodsSortBy {
+  TITLE = 'title',
+  PRICE = 'price',
+  CATEGORY = 'category',
+  POSTPONED = 'postponed',
+  REMAINING_TO_BE_POSTPONED = 'remainingToBePostponed',
+  WHEN_WILL_IT_END = 'whenWillItEnd',
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+}
