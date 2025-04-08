@@ -54,10 +54,6 @@ export class UsersService {
   }): Promise<UserPresenter> {
     const user = await this.findOne({ _id: userId });
 
-    if (!user) {
-      throw new NotFoundException(USER_NOT_FOUND);
-    }
-
     if (updateUserDto.email) {
       const searchedUser = await this.findOne({ email: updateUserDto.email });
       if (searchedUser) {
@@ -80,8 +76,13 @@ export class UsersService {
     return new UserPresenter(updatedUser);
   }
 
-  findOne(params: QueryOptions<Partial<IUser>>): Promise<IUser | null> {
-    return this.userModel.findOne(params);
+  async findOne(params: QueryOptions<Partial<IUser>>): Promise<IUser | null> {
+    const user = await this.userModel.findOne(params);
+    if (!user) {
+      throw new NotFoundException(USER_NOT_FOUND);
+    }
+
+    return user;
   }
 
   async create(userAttributes: Partial<CreateUserDto>) {

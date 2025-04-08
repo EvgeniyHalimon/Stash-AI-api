@@ -2,12 +2,12 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Param,
   Body,
   Query,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -58,10 +58,10 @@ export class GoodsController {
     description: "When goods doesn't exist on database",
   })
   async findById(@Param('id') id: string) {
-    return await this.goodsService.findByIdOrFail(id);
+    return await this.goodsService.findById(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a goods item' })
   @ApiResponse({
     status: 200,

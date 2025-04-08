@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, QueryOptions } from 'mongoose';
 import { IGoods } from './goods.types';
 import { Goods } from './goods.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { FindAllGoodsDto, GetAllGoodPresenter } from './dto';
+import { CreateGoodsDto, FindAllGoodsDto, GetAllGoodPresenter } from './dto';
 import { vocabulary } from 'src/shared';
 
 const {
@@ -36,16 +36,14 @@ export class GoodsService {
     return new GetAllGoodPresenter(items, total, page, limit);
   }
 
-  async findByIdOrFail(id: string): Promise<IGoods | never> {
-    const good = await this.goodsModel.findById(id).exec();
-    if (!good) {
-      throw new NotFoundException(GOODS_NOT_FOUND);
-    }
-    return good;
+  async findById(id: string): Promise<IGoods | never> {
+    await this.findOneOrFail({ _id: id });
+
+    return await this.goodsModel.findById(id).exec();
   }
 
   async update(id: string, updateDto: Partial<IGoods>): Promise<IGoods | null> {
-    await this.findByIdOrFail(id);
+    await this.findOneOrFail({ _id: id });
 
     return await this.goodsModel
       .findByIdAndUpdate(id, updateDto, { new: true })
@@ -53,7 +51,17 @@ export class GoodsService {
   }
 
   async delete(id: string): Promise<IGoods | null> {
-    await this.findByIdOrFail(id);
+    await this.findOneOrFail({ _id: id });
     return await this.goodsModel.findByIdAndDelete(id).exec();
+  }
+
+  async findOneOrFail(
+    params: QueryOptions<Partial<CreateGoodsDto>>,
+  ): Promise<IGoods | never> {
+    const good = await this.goodsModel.findOne(params).exec();
+    if (!good) {
+      throw new NotFoundException(GOODS_NOT_FOUND);
+    }
+    return good;
   }
 }

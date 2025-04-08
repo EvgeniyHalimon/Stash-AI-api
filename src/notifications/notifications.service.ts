@@ -22,7 +22,7 @@ export class NotificationsService {
     return this.notificationModel.create(params);
   }
 
-  async purge(_id: string, user: string) {
+  async delete(_id: string, user: string) {
     return await this.notificationModel.deleteOne({ _id, user });
   }
 

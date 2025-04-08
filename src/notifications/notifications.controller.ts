@@ -12,8 +12,8 @@ export class NotificationsController {
   }
 
   @Delete('/:id')
-  purge(@Req() request: ICustomRequest, @Param('id') id: string) {
-    return this.notificationsService.purge(id, request.user._id);
+  delete(@Req() request: ICustomRequest, @Param('id') id: string) {
+    return this.notificationsService.delete(id, request.user._id);
   }
 
   @Patch('/view-all')
