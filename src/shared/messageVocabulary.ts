@@ -16,4 +16,7 @@ export const vocabulary = {
   GOODS: {
     GOODS_NOT_FOUND: 'Goods not found.',
   },
+  NOTIFICATIONS: {
+    NOTIFICATION_NOT_FOUND: 'Notification not found.',
+  },
 };

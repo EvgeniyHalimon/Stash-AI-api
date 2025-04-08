@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, QueryOptions } from 'mongoose';
 import { INotifications } from './notifications.types';
 import { CreateNotificationDto } from './dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Notification } from './notifications.schema';
+import { vocabulary } from 'src/shared';
+
+const {
+  NOTIFICATIONS: { NOTIFICATION_NOT_FOUND },
+} = vocabulary;
 
 @Injectable()
 export class NotificationsService {
@@ -23,12 +28,20 @@ export class NotificationsService {
   }
 
   async delete(_id: string, user: string) {
+    await this.findOne({ _id });
     return await this.notificationModel.deleteOne({ _id, user });
   }
 
   async viewAll(user: string) {
     return await this.notificationModel.updateMany(
       { isViewed: false, user },
+      { isViewed: true },
+    );
+  }
+
+  async addView(id: string, user: string) {
+    return await this.notificationModel.updateOne(
+      { _id: id, isViewed: false, user },
       { isViewed: true },
     );
   }
@@ -52,9 +65,13 @@ export class NotificationsService {
     return result;
   }
 
-  findOne(
+  async findOne(
     params: QueryOptions<Partial<CreateNotificationDto>>,
   ): Promise<INotifications | null> {
-    return this.notificationModel.findOne(params);
+    const notification = await this.notificationModel.findOne(params);
+    if (!notification) {
+      throw new NotFoundException(NOTIFICATION_NOT_FOUND);
+    }
+    return notification;
   }
 }

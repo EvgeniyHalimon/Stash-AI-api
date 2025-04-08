@@ -19,6 +19,7 @@ import { IUser } from 'src/users/user.types';
 import { config } from '../config';
 
 import { /* confirmationMail, sendMail, */ vocabulary } from 'src/shared';
+import { UsersService } from 'src/users/user.service';
 
 const {
   auth: {
@@ -37,6 +38,7 @@ export class AuthService {
   constructor(
     @Inject(User) readonly userModel: typeof User,
     readonly jwtService: JwtService,
+    readonly userService: UsersService,
   ) {}
 
   async signUp(signUpDto: CreateUserDto): Promise<SignUpPresenter> {
@@ -73,13 +75,9 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<SignInPresenter> {
     const { password, email } = signInDto;
 
-    const { password: pwd, ...user } = await this.userModel.findOne({
+    const { password: pwd, ...user } = await this.userService.findOne({
       email,
     });
-
-    if (!user) {
-      throw new NotFoundException(NOT_FOUND);
-    }
 
     if (!user.active) {
       throw new BadRequestException(USER_IS_NOT_ACTIVE);
