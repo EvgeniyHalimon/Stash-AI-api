@@ -13,4 +13,7 @@ export const vocabulary = {
     ALREADY_EXISTS: 'User already exists.',
     EMAIL_IS_TAKEN: 'This email is taken.',
   },
+  GOODS: {
+    GOODS_NOT_FOUND: 'Goods not found.',
+  },
 };

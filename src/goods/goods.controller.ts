@@ -7,10 +7,21 @@ import {
   Param,
   Body,
   Query,
+  HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiNotFoundResponse,
+} from '@nestjs/swagger';
 import { GoodsService } from './goods.service';
 import { CreateGoodsDto, FindAllGoodsDto, UpdateGoodsDto } from './dto';
+import { vocabulary } from 'src/shared';
+
+const {
+  GOODS: { GOODS_NOT_FOUND },
+} = vocabulary;
 
 @ApiTags('goods')
 @Controller('goods')
@@ -38,9 +49,16 @@ export class GoodsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a goods item by id' })
   @ApiResponse({ status: 200, description: 'Return the goods item.' })
-  @ApiResponse({ status: 404, description: 'Goods not found.' })
+  @ApiNotFoundResponse({
+    example: {
+      message: GOODS_NOT_FOUND,
+      error: 'Not Found',
+      statusCode: HttpStatus.NOT_FOUND,
+    },
+    description: "When goods doesn't exist on database",
+  })
   async findById(@Param('id') id: string) {
-    return await this.goodsService.findById(id);
+    return await this.goodsService.findByIdOrFail(id);
   }
 
   @Put(':id')
@@ -49,7 +67,14 @@ export class GoodsController {
     status: 200,
     description: 'The goods has been successfully updated.',
   })
-  @ApiResponse({ status: 404, description: 'Goods not found.' })
+  @ApiNotFoundResponse({
+    example: {
+      message: GOODS_NOT_FOUND,
+      error: 'Not Found',
+      statusCode: HttpStatus.NOT_FOUND,
+    },
+    description: "When goods doesn't exist on database",
+  })
   async update(@Param('id') id: string, @Body() updateDto: UpdateGoodsDto) {
     return await this.goodsService.update(id, updateDto);
   }
@@ -60,7 +85,14 @@ export class GoodsController {
     status: 200,
     description: 'The goods has been successfully deleted.',
   })
-  @ApiResponse({ status: 404, description: 'Goods not found.' })
+  @ApiNotFoundResponse({
+    example: {
+      message: GOODS_NOT_FOUND,
+      error: 'Not Found',
+      statusCode: HttpStatus.NOT_FOUND,
+    },
+    description: "When goods doesn't exist on database",
+  })
   async delete(@Param('id') id: string) {
     return await this.goodsService.delete(id);
   }

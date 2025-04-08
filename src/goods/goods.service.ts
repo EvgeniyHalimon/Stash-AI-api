@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { IGoods } from './goods.types';
 import { Goods } from './goods.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { FindAllGoodsDto, GetAllGoodPresenter } from './dto';
+import { vocabulary } from 'src/shared';
+
+const {
+  GOODS: { GOODS_NOT_FOUND },
+} = vocabulary;
 
 @Injectable()
 export class GoodsService {
@@ -31,17 +36,24 @@ export class GoodsService {
     return new GetAllGoodPresenter(items, total, page, limit);
   }
 
-  async findById(id: string): Promise<IGoods | null> {
-    return await this.goodsModel.findById(id).exec();
+  async findByIdOrFail(id: string): Promise<IGoods | never> {
+    const good = await this.goodsModel.findById(id).exec();
+    if (!good) {
+      throw new NotFoundException(GOODS_NOT_FOUND);
+    }
+    return good;
   }
 
   async update(id: string, updateDto: Partial<IGoods>): Promise<IGoods | null> {
+    await this.findByIdOrFail(id);
+
     return await this.goodsModel
       .findByIdAndUpdate(id, updateDto, { new: true })
       .exec();
   }
 
   async delete(id: string): Promise<IGoods | null> {
+    await this.findByIdOrFail(id);
     return await this.goodsModel.findByIdAndDelete(id).exec();
   }
 }

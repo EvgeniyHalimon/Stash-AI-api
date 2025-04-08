@@ -73,7 +73,7 @@ export class AuthService {
   async signIn(signInDto: SignInDto): Promise<SignInPresenter> {
     const { password, email } = signInDto;
 
-    const user = await this.userModel.findOne({
+    const { password: pwd, ...user } = await this.userModel.findOne({
       email,
     });
 
@@ -87,7 +87,7 @@ export class AuthService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-    const match = await verifyPassword(password, user.password);
+    const match = await verifyPassword(password, pwd);
     if (!match) {
       throw new BadRequestException(WRONG_PASSWORD);
     }
