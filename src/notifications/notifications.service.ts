@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, QueryOptions } from 'mongoose';
 import { INotifications } from './notifications.types';
-import { CreateNotificationDto } from './dto';
+import {
+  CreateNotificationDto,
+  GetAllNotificationDto,
+  GetAllNotificationsPresenter,
+} from './dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Notification } from './notifications.schema';
 import { vocabulary } from 'src/shared';
@@ -17,10 +21,23 @@ export class NotificationsService {
     private readonly notificationModel: Model<INotifications>,
   ) {}
 
-  async findAll() {
-    const notifications = await this.notificationModel.find();
+  async findAll(queryParams: GetAllNotificationDto) {
+    const { sort, sortBy, page = 1, limit = 10 } = queryParams;
+    const skip = (page - 1) * limit;
 
-    return notifications;
+    const sortOptions = {};
+    sortOptions[sortBy] = sort === 'asc' ? 1 : -1;
+    const [notifications, total] = await Promise.all([
+      this.notificationModel
+        .find()
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+      this.notificationModel.countDocuments().exec(),
+    ]);
+
+    return new GetAllNotificationsPresenter(notifications, total, page, limit);
   }
 
   async create(params) {

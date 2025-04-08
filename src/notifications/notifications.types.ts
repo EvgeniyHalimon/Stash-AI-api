@@ -7,3 +7,9 @@ export interface INotifications {
   isViewed: boolean;
   createdAt: Date;
 }
+
+export enum NotificationsSortBy {
+  CREATED_AT = 'createdAt',
+  TEXT = 'text',
+  IS_VIEWED = 'isViewed',
+}

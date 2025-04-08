@@ -1,4 +1,3 @@
-// nest
 import {
   Body,
   Controller,
@@ -14,19 +13,14 @@ import {
   ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
+  ApiOperation,
+  ApiParam,
 } from '@nestjs/swagger';
 
-// service
 import { AuthService } from './auth.service';
-
-// decorator
 import { Public } from 'src/shared/public.decorator';
-
-// dto's
 import { SignInDto, CreateUserDto } from 'src/users/dto';
 import { SignInPresenter, SignUpPresenter } from './dto';
-
-// types
 import { ICustomRequest, vocabulary } from 'src/shared';
 import { ITokens } from './auth.types';
 
@@ -43,6 +37,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @Public()
+  @ApiOperation({ summary: 'Log in an existing user' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User successfully logged in.',
@@ -54,7 +49,7 @@ export class AuthController {
       error: 'Bad Request',
       statusCode: HttpStatus.BAD_REQUEST,
     },
-    description: 'When user set incorrect password',
+    description: 'When user provides an incorrect password.',
   })
   @ApiNotFoundResponse({
     example: {
@@ -62,7 +57,7 @@ export class AuthController {
       error: 'Not Found',
       statusCode: HttpStatus.NOT_FOUND,
     },
-    description: "When user with current email doesn't exist on database",
+    description: "When user with provided email doesn't exist in the database.",
   })
   signIn(@Body() signInDTO: SignInDto): Promise<SignInPresenter> {
     return this.authService.signIn(signInDTO);
@@ -71,13 +66,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('register')
   @Public()
+  @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: 'User successfully created account.',
+    description: 'User successfully created an account.',
     type: SignUpPresenter,
   })
   @ApiBadRequestResponse({
-    description: 'When user already exists',
+    description: 'When user with the provided email already exists.',
     example: {
       message: ALREADY_EXISTS,
       error: 'Bad Request',
@@ -89,12 +85,32 @@ export class AuthController {
   }
 
   @Get('refresh')
+  @ApiOperation({ summary: 'Refresh authentication tokens' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Tokens successfully refreshed.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid refresh token or user not found.',
+  })
   refresh(@Req() req: ICustomRequest): Promise<ITokens | void> {
     return this.authService.refresh(req.user._id);
   }
 
   @Get('confirm/:token')
   @Public()
+  @ApiOperation({ summary: 'Confirm user account using email token' })
+  @ApiParam({
+    name: 'token',
+    description: 'Confirmation token sent to user email.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User successfully confirmed.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid or expired token.',
+  })
   confirm(@Param('token') token: string) {
     return this.authService.confirmUser(token);
   }

@@ -39,7 +39,7 @@ export class GoodsController {
     return await this.goodsService.create(goodsDto);
   }
 
-  @Get()
+  @Get('/')
   @ApiOperation({ summary: 'Get all goods with filtering and pagination' })
   @ApiResponse({ status: 200, description: 'Return all goods.' })
   async findAll(@Query() query: FindAllGoodsDto) {
