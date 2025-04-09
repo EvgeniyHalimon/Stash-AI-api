@@ -5,6 +5,7 @@ export const GoodsSchema = new Schema<IGoods>({
   _id: {
     type: String,
   },
+  user: { type: String, ref: 'User' },
   title: { type: String, required: true },
   price: { type: Number, required: false },
   category: { type: String, required: true },

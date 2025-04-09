@@ -9,8 +9,18 @@ export class TasksService {
     readonly userService: UsersService,
     readonly goodsService: GoodsService,
   ) {}
-  @Cron('45 * * * * *')
-  handleCron() {
-    console.log('Cron job executed every 45 seconds');
+
+  @Cron('10 * * * *')
+  async everyDayAt9AM() {
+    const goods = await this.goodsService.findEndingSoonForEachUser(1440);
+
+    console.log(goods);
+  }
+
+  @Cron('0 12 * * 1')
+  async everyWeekAtMonday() {
+    const goods = await this.goodsService.findEndingSoonForEachUser(10080);
+
+    console.log(goods);
   }
 }

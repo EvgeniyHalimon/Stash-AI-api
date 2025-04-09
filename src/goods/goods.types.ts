@@ -1,5 +1,8 @@
+import { IUser } from 'src/users/user.types';
+
 export interface IGoods {
   _id: string;
+  user: IUser;
   title: string;
   price: number;
   category: string;

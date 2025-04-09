@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, QueryOptions } from 'mongoose';
+import * as dayjs from 'dayjs';
+import { InjectModel } from '@nestjs/mongoose';
 import { IGoods } from './goods.types';
 import { Goods } from './goods.schema';
-import { InjectModel } from '@nestjs/mongoose';
 import { CreateGoodsDto, FindAllGoodsDto, GetAllGoodPresenter } from './dto';
 import { vocabulary } from 'src/shared';
 
@@ -63,5 +64,43 @@ export class GoodsService {
       throw new NotFoundException(GOODS_NOT_FOUND);
     }
     return good;
+  }
+
+  async findEndingSoonForEachUser(minutesBeforeEnd = 60): Promise<any[]> {
+    const now = new Date();
+    const soon = dayjs(now).add(minutesBeforeEnd, 'minute').toDate();
+
+    const groupedGoods = await this.goodsModel.aggregate([
+      {
+        $match: {
+          whenWillItEnd: {
+            $lte: soon,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$user',
+          goods: { $push: '$$ROOT' },
+          totalGoods: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$userInfo',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+
+    return groupedGoods;
   }
 }
