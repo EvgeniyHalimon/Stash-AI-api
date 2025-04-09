@@ -8,6 +8,7 @@ import { Model, QueryOptions } from 'mongoose';
 import {
   CreateUserDto,
   GetAllUserPresenter,
+  GetAllUsersDto,
   PatchUserDto,
   UserPresenter,
 } from './dto';
@@ -31,7 +32,7 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<IUser>,
   ) {}
 
-  async findAll(queryParams: any): Promise<GetAllUserPresenter> {
+  async findAll(queryParams: GetAllUsersDto): Promise<GetAllUserPresenter> {
     const { sort, sortBy, page = 1, limit = 10 } = queryParams;
     const skip = (page - 1) * limit;
 

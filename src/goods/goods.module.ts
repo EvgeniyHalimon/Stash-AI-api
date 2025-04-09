@@ -12,5 +12,6 @@ import { DatabaseModule } from 'src/database/database.module';
     DatabaseModule,
     MongooseModule.forFeature([{ name: Goods.name, schema: GoodsSchema }]),
   ],
+  exports: [GoodsService],
 })
 export class GoodsModule {}
