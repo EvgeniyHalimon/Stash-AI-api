@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
+import { EventsGateway } from 'src/events/events.gateway';
 import { GoodsService } from 'src/goods/goods.service';
 import { UsersService } from 'src/users/user.service';
 
@@ -8,6 +9,7 @@ export class TasksService {
   constructor(
     readonly userService: UsersService,
     readonly goodsService: GoodsService,
+    readonly eventsGateway: EventsGateway,
   ) {}
 
   @Cron('10 * * * *')
