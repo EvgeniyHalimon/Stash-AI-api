@@ -8,9 +8,9 @@ export const UserSchema = new Schema<IUser>({
     type: String,
   },
   firstName: { type: String, required: true },
-  lastName: { type: String, required: false },
+  lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  active: { type: Boolean, required: true, default: true },
+  active: { type: Boolean, default: true },
   password: { type: String, required: false },
   role: {
     type: String,

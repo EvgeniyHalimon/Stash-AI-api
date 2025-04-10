@@ -77,9 +77,12 @@ export class UsersService {
     return new UserPresenter(updatedUser);
   }
 
-  async findOne(params: QueryOptions<Partial<IUser>>): Promise<IUser | null> {
+  async findOne(
+    params: QueryOptions<Partial<IUser>>,
+    forSignUp = false,
+  ): Promise<IUser | null> {
     const user = await this.userModel.findOne(params);
-    if (!user) {
+    if (!user && !forSignUp) {
       throw new NotFoundException(USER_NOT_FOUND);
     }
 

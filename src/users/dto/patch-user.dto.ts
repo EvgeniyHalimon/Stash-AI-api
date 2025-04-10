@@ -66,4 +66,12 @@ export class PatchUserDto {
     example: 'qwertyui12345678',
   })
   password: string;
+
+  @ApiProperty({
+    example: true,
+    type: Boolean,
+    nullable: true,
+    description: 'Represents whether the user is activated or not',
+  })
+  active: boolean;
 }

@@ -1,12 +1,9 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-
-import { User } from 'src/users/user.schema';
 
 import { CreateUserDto, SignInDto } from 'src/users/dto';
 import { SignInPresenter, SignUpPresenter } from './dto';
@@ -36,40 +33,41 @@ const {
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(User) readonly userModel: typeof User,
     readonly jwtService: JwtService,
     readonly userService: UsersService,
   ) {}
 
   async signUp(signUpDto: CreateUserDto): Promise<SignUpPresenter> {
-    const user = await this.userModel.findOne({
-      email: signUpDto.email,
-    });
+    try {
+      const user = await this.userService.findOne(
+        {
+          email: signUpDto.email,
+        },
+        true,
+      );
 
-    if (user) {
-      throw new BadRequestException(ALREADY_EXISTS);
-    }
+      if (user) {
+        throw new BadRequestException(ALREADY_EXISTS);
+      }
 
-    const userAttributes = {
-      ...signUpDto,
-      password: await hashPassword(signUpDto.password),
-    };
+      const userAttributes = {
+        ...signUpDto,
+        password: await hashPassword(signUpDto.password),
+      };
 
-    const createdUser = await this.userModel.create(userAttributes);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: p, ...userWithoutPassword } = createdUser;
-
-    /* const token = this.jwtService.sign(userWithoutPassword, {
+      /* const token = this.jwtService.sign(userWithoutPassword, {
       secret: config.SECRET_CONFIRM,
       expiresIn: config.EXPIRES_IN_CONFIRM,
     }); */
 
-    // const message = confirmationMail(token, userWithoutPassword.firstName);
+      // const message = confirmationMail(token, userWithoutPassword.firstName);
 
-    //await sendMail([userWithoutPassword.email], 'Confirm your email', message);
+      //await sendMail([userWithoutPassword.email], 'Confirm your email', message);
 
-    return userWithoutPassword;
+      return await this.userService.create(userAttributes);
+    } catch (error) {
+      console.log('🚀 ~ AuthService ~ signUp ~ error:', error);
+    }
   }
 
   async signIn(signInDto: SignInDto): Promise<SignInPresenter> {
@@ -96,7 +94,7 @@ export class AuthService {
   }
 
   async refresh(_id: string): Promise<ITokens | void> {
-    const user = await this.userModel.findOne({
+    const user = await this.userService.findOne({
       _id,
     });
     if (!user) {
@@ -120,7 +118,7 @@ export class AuthService {
       throw new BadRequestException(INVALID_TOKEN);
     }
 
-    const user = await this.userModel.findOne({
+    const user = await this.userService.findOne({
       email,
     });
 
@@ -132,7 +130,10 @@ export class AuthService {
       throw new BadRequestException(USER_ALREADY_ACTIVATED);
     }
 
-    await this.userModel.updateOne({ _id: user._id }, { active: true });
+    await this.userService.patch({
+      updateUserDto: { active: true },
+      userId: user._id,
+    });
 
     return { message: USER_IS_ACTIVATED };
   }

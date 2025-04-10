@@ -14,5 +14,6 @@ import { DatabaseModule } from 'src/database/database.module';
       { name: Notification.name, schema: NotificationsSchema },
     ]),
   ],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

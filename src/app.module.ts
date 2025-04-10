@@ -7,6 +7,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GoodsModule } from './goods/goods.module';
 import { EventsModule } from './events/events.module';
+import { AuthModule } from './auth/auth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -17,6 +19,13 @@ import { EventsModule } from './events/events.module';
     TasksModule,
     GoodsModule,
     EventsModule,
+    AuthModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
   ],
 })
 export class AppModule {
