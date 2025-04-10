@@ -1,9 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
 import { IGoods } from './goods.types';
+import { randomUUID } from 'crypto';
 
 export const GoodsSchema = new Schema<IGoods>({
   _id: {
     type: String,
+    default: () => randomUUID(),
   },
   user: { type: String, ref: 'User' },
   title: { type: String, required: true },

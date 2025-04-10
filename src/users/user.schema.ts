@@ -1,11 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
-
+import { randomUUID } from 'crypto';
 import { IUser } from './user.types';
 import { UserRolesEnum } from './user.constants';
 
 export const UserSchema = new Schema<IUser>({
   _id: {
     type: String,
+    default: () => randomUUID(),
   },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
