@@ -1,19 +1,23 @@
-import mongoose, { Schema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 import { randomUUID } from 'crypto';
-import { INotifications } from './notifications.types';
 
-export const NotificationsSchema = new Schema<INotifications>({
-  _id: {
-    type: String,
-    default: () => randomUUID(),
-  },
-  user: { type: String, ref: 'User' },
-  text: { type: String },
-  isViewed: { type: Boolean, default: false },
-  createdAt: { type: Date, default: () => new Date() },
-});
+@Schema()
+export class Notification extends Document {
+  @Prop({ default: () => randomUUID() })
+  _id: string;
 
-export const Notification = mongoose.model<INotifications>(
-  'Notification',
-  NotificationsSchema,
-);
+  @Prop({ type: String, ref: 'User' })
+  user: string;
+
+  @Prop()
+  text: string;
+
+  @Prop({ default: false })
+  isViewed: boolean;
+
+  @Prop({ default: () => new Date() })
+  createdAt: Date;
+}
+
+export const NotificationsSchema = SchemaFactory.createForClass(Notification);

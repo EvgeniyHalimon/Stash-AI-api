@@ -38,36 +38,33 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDto: CreateUserDto): Promise<SignUpPresenter> {
-    try {
-      const user = await this.userService.findOne(
-        {
-          email: signUpDto.email,
-        },
-        true,
-      );
+    const user = await this.userService.findOne(
+      {
+        email: signUpDto.email,
+      },
+      true,
+    );
+    console.log('🚀 ~ AuthService ~ signUp ~ user:', user);
 
-      if (user) {
-        throw new BadRequestException(ALREADY_EXISTS);
-      }
+    if (user) {
+      throw new BadRequestException(ALREADY_EXISTS);
+    }
 
-      const userAttributes = {
-        ...signUpDto,
-        password: await hashPassword(signUpDto.password),
-      };
+    const userAttributes = {
+      ...signUpDto,
+      password: await hashPassword(signUpDto.password),
+    };
 
-      /* const token = this.jwtService.sign(userWithoutPassword, {
+    /* const token = this.jwtService.sign(userWithoutPassword, {
       secret: config.SECRET_CONFIRM,
       expiresIn: config.EXPIRES_IN_CONFIRM,
     }); */
 
-      // const message = confirmationMail(token, userWithoutPassword.firstName);
+    // const message = confirmationMail(token, userWithoutPassword.firstName);
 
-      //await sendMail([userWithoutPassword.email], 'Confirm your email', message);
+    //await sendMail([userWithoutPassword.email], 'Confirm your email', message);
 
-      return await this.userService.create(userAttributes);
-    } catch (error) {
-      console.log('🚀 ~ AuthService ~ signUp ~ error:', error);
-    }
+    return await this.userService.create(userAttributes);
   }
 
   async signIn(signInDto: SignInDto): Promise<SignInPresenter> {
