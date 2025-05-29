@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Model, QueryOptions } from 'mongoose';
@@ -28,22 +30,30 @@ const {
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<IUser>,
   ) {}
 
   async findAll(queryParams: GetAllUsersDto): Promise<GetAllUserPresenter> {
-    const { sort, sortBy, page = 1, limit = 10 } = queryParams;
-    const skip = (page - 1) * limit;
+    try {
+      const { sort, sortBy, page = 1, limit = 10 } = queryParams;
+      const skip = (page - 1) * limit;
 
-    const sortOptions = {};
-    sortOptions[sortBy] = sort === 'asc' ? 1 : -1;
-    const [users, total] = await Promise.all([
-      this.userModel.find().sort(sortOptions).skip(skip).limit(limit).exec(),
-      this.userModel.countDocuments().exec(),
-    ]);
+      const sortOptions = {};
+      sortOptions[sortBy] = sort === 'asc' ? 1 : -1;
 
-    return new GetAllUserPresenter(users, total, page, limit);
+      const [users, total] = await Promise.all([
+        this.userModel.find().sort(sortOptions).skip(skip).limit(limit).exec(),
+        this.userModel.countDocuments().exec(),
+      ]);
+
+      return new GetAllUserPresenter(users, total, page, limit);
+    } catch (error) {
+      this.logger.error('Error during findAll', error.stack || error.message);
+      throw new InternalServerErrorException('Failed to retrieve users');
+    }
   }
 
   async patch({
@@ -53,45 +63,63 @@ export class UsersService {
     updateUserDto: Partial<PatchUserDto>;
     userId: string;
   }): Promise<UserPresenter> {
-    const user = await this.findOne({ _id: userId });
+    try {
+      const user = await this.findOne({ _id: userId });
 
-    if (updateUserDto.email) {
-      const searchedUser = await this.findOne({ email: updateUserDto.email });
-      if (searchedUser) {
-        throw new BadRequestException(EMAIL_IS_TAKEN);
+      if (updateUserDto.email) {
+        const searchedUser = await this.findOne(
+          { email: updateUserDto.email },
+          true,
+        );
+        if (searchedUser && searchedUser._id.toString() !== userId) {
+          throw new BadRequestException(EMAIL_IS_TAKEN);
+        }
       }
+
+      if (updateUserDto.password) {
+        updateUserDto.password = await hashPassword(updateUserDto.password);
+      }
+
+      user.set({ ...updateUserDto });
+      const updatedUser = await user.save();
+
+      return new UserPresenter(updatedUser);
+    } catch (error) {
+      this.logger.error('Error during patch', error.stack || error.message);
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to update user');
     }
-
-    if (updateUserDto.password) {
-      updateUserDto.password = await hashPassword(updateUserDto.password);
-    }
-
-    const updateObject = {
-      ...updateUserDto,
-    };
-
-    user.set(updateObject);
-
-    const updatedUser = await user.save();
-
-    return new UserPresenter(updatedUser);
   }
 
   async findOne(
     params: QueryOptions<Partial<IUser>>,
     forSignUp = false,
   ): Promise<IUser | null> {
-    const user = await this.userModel.findOne(params);
-    if (!user && !forSignUp) {
-      throw new NotFoundException(USER_NOT_FOUND);
+    try {
+      const user = await this.userModel.findOne(params);
+      if (!user && !forSignUp) {
+        throw new NotFoundException(USER_NOT_FOUND);
+      }
+      return user;
+    } catch (error) {
+      this.logger.error('Error during findOne', error.stack || error.message);
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to find user');
     }
-
-    return user;
   }
 
   async create(userAttributes: Partial<CreateUserDto>) {
-    const createdUser = await this.userModel.create(userAttributes);
-
-    return new SignUpPresenter(createdUser.toObject());
+    try {
+      const createdUser = await this.userModel.create(userAttributes);
+      return new SignUpPresenter(createdUser.toObject());
+    } catch (error) {
+      this.logger.error('Error during create', error.stack || error.message);
+      throw new InternalServerErrorException('Failed to create user');
+    }
   }
 }
