@@ -12,17 +12,15 @@ export class TasksService {
     readonly eventsGateway: EventsGateway,
   ) {}
 
-  @Cron('10 * * * *')
+  @Cron('0 9 * * 1')
   async everyDayAt9AM() {
     const goods = await this.goodsService.findEndingSoonForEachUser(1440);
-
-    console.log(goods);
+    console.log('🚀 ~ TasksService ~ everyDayAt9AM ~ goods:', goods);
   }
 
   @Cron('0 12 * * 1')
   async everyWeekAtMonday() {
     const goods = await this.goodsService.findEndingSoonForEachUser(10080);
-
-    console.log(goods);
+    console.log('🚀 ~ TasksService ~ everyWeekAtMonday ~ goods:', goods);
   }
 }

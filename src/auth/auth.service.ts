@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -57,7 +58,9 @@ export class AuthService {
     } catch (error) {
       this.logger.error('Error during signUp', error.stack || error.message);
       if (error instanceof BadRequestException) throw error;
-      throw new Error('Internal server error during sign up');
+      throw new InternalServerErrorException(
+        'Internal server error during sign up',
+      );
     }
   }
 
@@ -85,7 +88,9 @@ export class AuthService {
       ) {
         throw error;
       }
-      throw new Error('Internal server error during sign in');
+      throw new InternalServerErrorException(
+        'Internal server error during sign in',
+      );
     }
   }
 
@@ -100,7 +105,9 @@ export class AuthService {
         error.stack || error.message,
       );
       if (error instanceof NotFoundException) throw error;
-      throw new Error('Internal server error during refresh');
+      throw new InternalServerErrorException(
+        'Internal server error during refresh',
+      );
     }
   }
 
@@ -141,7 +148,9 @@ export class AuthService {
       ) {
         throw error;
       }
-      throw new Error('Internal server error during user confirmation');
+      throw new InternalServerErrorException(
+        'Internal server error during user confirmation',
+      );
     }
   }
 
