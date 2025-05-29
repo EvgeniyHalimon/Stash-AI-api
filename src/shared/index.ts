@@ -5,3 +5,4 @@ export * from './messageVocabulary';
 export * from './cors.middleware';
 export * from './normalize-url.middleware';
 export * from './public.decorator';
+export * from './AllExceptions.filter';

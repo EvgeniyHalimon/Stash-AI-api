@@ -7,10 +7,11 @@ import { AppModule } from './app.module';
 
 import { config } from './config';
 
-import { CustomValidationPipe } from './shared/CustomValidationPipe';
+import { AllExceptionsFilter, CustomValidationPipe } from './shared';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.enableCors({
     origin: config.FE_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
