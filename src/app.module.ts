@@ -9,6 +9,7 @@ import { GoodsModule } from './goods/goods.module';
 import { EventsModule } from './events/events.module';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { NormalizeUrlMiddleware } from './shared';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(CorsMiddleware)
+      .apply(CorsMiddleware, NormalizeUrlMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
