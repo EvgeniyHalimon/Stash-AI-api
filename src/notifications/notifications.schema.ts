@@ -10,6 +10,9 @@ export class Notification extends Document {
   @Prop({ type: String, ref: 'User' })
   user: string;
 
+  @Prop({ type: String, ref: 'Goods', required: false })
+  goods?: string;
+
   @Prop()
   text: string;
 

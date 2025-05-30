@@ -41,3 +41,18 @@ GoodsSchema.pre('save', function (next) {
   this.updatedAt = new Date();
   next();
 });
+
+GoodsSchema.pre('findOneAndDelete', async function (next) {
+  try {
+    const goodsId = this.getQuery()._id;
+
+    await this.model.db
+      .model<Notification>('Notification')
+      .deleteMany({ goods: goodsId });
+
+    next();
+  } catch (error) {
+    console.error('Error while cascade delete of good:', error);
+    next(error);
+  }
+});

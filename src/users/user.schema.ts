@@ -1,31 +1,8 @@
-/* 
-
-export const UserSchema = new Schema<IUser>({
-  _id: {
-    type: String,
-    default: () => randomUUID(),
-  },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  active: { type: Boolean, default: true },
-  password: { type: String, required: false },
-  role: {
-    type: String,
-    enum: Object.values(UserRolesEnum),
-    default: UserRolesEnum.USER,
-  },
-  createdAt: { type: Date, default: () => new Date() },
-  updatedAt: { type: Date, default: () => new Date() },
-});
-
-
-export const User = mongoose.model<IUser>('User', UserSchema); */
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { randomUUID } from 'crypto';
 import { UserRolesEnum } from './user.constants';
+import { Goods } from 'src/goods/goods.schema';
 
 @Schema()
 export class User extends Document {
@@ -66,4 +43,21 @@ export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.pre('save', function (next) {
   this.updatedAt = new Date();
   next();
+});
+
+UserSchema.pre('findOneAndDelete', async function (next) {
+  try {
+    const userId = this.getQuery()._id;
+
+    await this.model.db.model<Goods>('Goods').deleteMany({ user: userId });
+
+    await this.model.db
+      .model<Notification>('Notification')
+      .deleteMany({ user: userId });
+
+    next();
+  } catch (error) {
+    console.error('Error while cascade delete of user:', error);
+    next(error);
+  }
 });
