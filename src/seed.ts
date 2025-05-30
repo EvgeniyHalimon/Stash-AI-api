@@ -30,25 +30,25 @@ async function seed() {
     ]);
 
     const goods = await Promise.all([
-      createGoods(users[0]._id, 'MacBook Pro', 2000, 1500, 500, 'electronics'),
-      createGoods(users[1]._id, 'T-shirt', 25, 5, 20, 'clothing'),
-      createGoods(users[0]._id, 'iPhone 15', 1200, 800, 400, 'electronics'),
-      createGoods(users[1]._id, 'Jeans', 60, 20, 40, 'clothing'),
+      createGoods(users[0]._id, 'MacBook Pro', 2000, 1500, 0, 'electronics'),
+      createGoods(users[1]._id, 'T-shirt', 25, 5, 0, 'clothing'),
+      createGoods(users[0]._id, 'iPhone 15', 1200, 800, 0, 'electronics'),
+      createGoods(users[1]._id, 'Jeans', 60, 20, 0, 'clothing'),
       createGoods(
         users[0]._id,
         'Wireless Headphones',
         150,
         100,
-        50,
+        0,
         'electronics',
       ),
-      createGoods(users[1]._id, 'Sneakers', 90, 30, 60, 'clothing'),
-      createGoods(users[0]._id, 'Gaming Mouse', 70, 20, 50, 'electronics'),
-      createGoods(users[1]._id, 'Backpack', 40, 10, 30, 'accessories'),
-      createGoods(users[0]._id, 'Smartwatch', 300, 200, 100, 'electronics'),
-      createGoods(users[1]._id, 'Jacket', 120, 60, 60, 'clothing'),
-      createGoods(users[0]._id, 'Tablet', 500, 250, 250, 'electronics'),
-      createGoods(users[1]._id, 'Cap', 15, 5, 10, 'accessories'),
+      createGoods(users[1]._id, 'Sneakers', 90, 30, 0, 'clothing'),
+      createGoods(users[0]._id, 'Gaming Mouse', 70, 20, 0, 'electronics'),
+      createGoods(users[1]._id, 'Backpack', 40, 10, 0, 'accessories'),
+      createGoods(users[0]._id, 'Smartwatch', 300, 200, 0, 'electronics'),
+      createGoods(users[1]._id, 'Jacket', 120, 60, 0, 'clothing'),
+      createGoods(users[0]._id, 'Tablet', 500, 250, 0, 'electronics'),
+      createGoods(users[1]._id, 'Cap', 15, 5, 0, 'accessories'),
     ]);
 
     await Promise.all([

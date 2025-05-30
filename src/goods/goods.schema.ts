@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { CallbackWithoutResultAndOptionalError, Document } from 'mongoose';
 import { randomUUID } from 'crypto';
 
 @Schema()
@@ -56,3 +56,36 @@ GoodsSchema.pre('findOneAndDelete', async function (next) {
     next(error);
   }
 });
+
+GoodsSchema.pre('save', function (next) {
+  if (this.price != null && this.postponed != null) {
+    this.remainingToBePostponed = Math.max(0, this.price - this.postponed);
+  }
+  this.updatedAt = new Date();
+  next();
+});
+
+GoodsSchema.pre(
+  'findOneAndUpdate',
+  function (next: CallbackWithoutResultAndOptionalError) {
+    const update = this.getUpdate() as Record<string, any>;
+
+    const $set = update.$set ?? {};
+
+    const price = update.price ?? $set.price;
+    const postponed = update.postponed ?? $set.postponed;
+
+    if (price !== undefined && postponed !== undefined) {
+      const remaining = Math.max(0, price - postponed);
+
+      if (!update.$set) update.$set = {};
+      update.$set.remainingToBePostponed = remaining;
+    }
+
+    if (!update.$set) update.$set = {};
+    update.$set.updatedAt = new Date();
+
+    this.setUpdate(update);
+    next();
+  },
+);

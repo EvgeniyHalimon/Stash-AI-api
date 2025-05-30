@@ -73,16 +73,19 @@ export class GoodsService {
     }
   }
 
-  async update(id: string, updateDto: Partial<IGoods>): Promise<IGoods | null> {
+  async update(
+    _id: string,
+    updateDto: Partial<IGoods>,
+  ): Promise<IGoods | null> {
     try {
-      await this.findOneOrFail({ _id: id });
+      await this.findOneOrFail({ _id });
 
       return await this.goodsModel
-        .findByIdAndUpdate(id, updateDto, { new: true })
+        .findByIdAndUpdate(_id, updateDto, { new: true })
         .exec();
     } catch (error) {
       this.logger.error(
-        `Error updating good ID: ${id}`,
+        `Error updating good ID: ${_id}`,
         error.stack || error.message,
       );
       throw error instanceof NotFoundException
