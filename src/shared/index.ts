@@ -6,3 +6,4 @@ export * from './cors.middleware';
 export * from './normalize-url.middleware';
 export * from './public.decorator';
 export * from './AllExceptions.filter';
+export * from './mails';
