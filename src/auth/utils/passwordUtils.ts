@@ -1,4 +1,4 @@
-// library
+import { InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 const hashPassword = async (password: string) => {
@@ -8,7 +8,9 @@ const hashPassword = async (password: string) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   } catch (err) {
-    throw new Error(err instanceof Error ? err.message : 'Unknown error');
+    throw new InternalServerErrorException(
+      err instanceof Error ? err.message : 'Password hashing failed',
+    );
   }
 };
 
@@ -17,7 +19,9 @@ const verifyPassword = async (password: string, hashPassword: string) => {
     const comparedPassword = await bcrypt.compare(password, hashPassword);
     return comparedPassword;
   } catch (err) {
-    throw new Error(err instanceof Error ? err.message : 'Unknown error');
+    throw new InternalServerErrorException(
+      err instanceof Error ? err.message : 'Unexpected bcrypt error',
+    );
   }
 };
 
