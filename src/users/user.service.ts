@@ -8,7 +8,6 @@ import {
 import { Model, QueryOptions } from 'mongoose';
 
 import {
-  CreateUserDto,
   GetAllUserPresenter,
   GetAllUsersDto,
   PatchUserDto,
@@ -20,7 +19,7 @@ import { hashPassword } from 'src/auth/utils/passwordUtils';
 import { IUser } from './user.types';
 
 import { vocabulary } from 'src/shared';
-import { SignUpPresenter } from 'src/auth/dto';
+import { CreateUserDto, SignUpPresenter } from 'src/auth/dto';
 import { User } from './user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 

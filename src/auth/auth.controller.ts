@@ -2,8 +2,12 @@ import { Body, Controller, Post, Get, Req, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
-import { SignInDto, CreateUserDto } from 'src/users/dto';
-import { SignInPresenter, SignUpPresenter } from './dto';
+import {
+  SignInPresenter,
+  SignUpPresenter,
+  SignInDto,
+  CreateUserDto,
+} from './dto';
 import { ICustomRequest } from 'src/shared';
 import { ITokens } from './auth.types';
 import {

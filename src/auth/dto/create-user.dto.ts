@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 // constants
-import { userFieldLengths } from '../user.constants';
+import { userFieldLengths } from '../../users/user.constants';
 
 // custom decorators
 import {
