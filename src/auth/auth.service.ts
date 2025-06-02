@@ -135,10 +135,7 @@ export class AuthService {
       if (!user) throw new NotFoundException(NOT_FOUND);
       if (user.active) throw new BadRequestException(USER_ALREADY_ACTIVATED);
 
-      await this.userService.patch({
-        userId: user._id,
-        updateUserDto: { active: true },
-      });
+      await this.userService.patch({ active: true }, user._id);
 
       return { message: USER_IS_ACTIVATED };
     } catch (error) {

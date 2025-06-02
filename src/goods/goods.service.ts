@@ -37,18 +37,28 @@ export class GoodsService {
     }
   }
 
-  async findAll(queryParams: FindAllGoodsDto): Promise<GetAllGoodPresenter> {
+  async findAll(
+    queryParams: FindAllGoodsDto,
+    user?: string,
+  ): Promise<GetAllGoodPresenter> {
     try {
-      const { sort, sortBy, page = 1, limit = 10 } = queryParams;
+      const {
+        sort = 'desc',
+        sortBy = 'createdAt',
+        page = 1,
+        limit = 10,
+      } = queryParams;
       const skip = (page - 1) * limit;
 
       const sortOptions: Record<string, SortOrder> = {
         [sortBy]: sort === 'asc' ? 1 : -1,
       };
 
+      const filter: Record<string, any> = user ? { user } : {};
+
       const [items, total] = await Promise.all([
         this.goodsModel
-          .find()
+          .find(filter)
           .populate({
             path: 'user',
             select: '_id firstName lastName email role',
@@ -57,7 +67,7 @@ export class GoodsService {
           .skip(skip)
           .limit(limit)
           .exec(),
-        this.goodsModel.countDocuments().exec(),
+        this.goodsModel.countDocuments(filter).exec(),
       ]);
 
       return new GetAllGoodPresenter(items, total, page, limit);

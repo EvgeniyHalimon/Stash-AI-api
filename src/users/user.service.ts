@@ -55,22 +55,19 @@ export class UsersService {
     }
   }
 
-  async patch({
-    updateUserDto,
-    userId,
-  }: {
-    updateUserDto: Partial<PatchUserDto>;
-    userId: string;
-  }): Promise<UserPresenter> {
+  async patch(
+    updateUserDto: Partial<PatchUserDto>,
+    _id: string,
+  ): Promise<UserPresenter> {
     try {
-      const user = await this.findOne({ _id: userId });
+      const user = await this.findOne({ _id });
 
       if (updateUserDto.email) {
         const searchedUser = await this.findOne(
           { email: updateUserDto.email },
           true,
         );
-        if (searchedUser && searchedUser._id.toString() !== userId) {
+        if (searchedUser && searchedUser._id.toString() !== _id) {
           throw new BadRequestException(EMAIL_IS_TAKEN);
         }
       }

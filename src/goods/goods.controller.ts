@@ -13,11 +13,13 @@ import { GoodsService } from './goods.service';
 import { CreateGoodsDto, FindAllGoodsDto, UpdateGoodsDto } from './dto';
 import {
   CreateProductDecorators,
+  DeleteProductDecorators,
+  GetAllProductsDecorators,
   GetProductByIdDecorators,
-  GetProductDecorators,
   PatchDecorators,
 } from './routeDecorators';
-import { DeleteProductDecorators } from './routeDecorators/DeleteProduct.decorator';
+import { CurrentUser } from 'src/shared';
+import { IUser } from 'src/users/user.types';
 
 @ApiBearerAuth('bearer')
 @ApiTags('goods')
@@ -32,13 +34,22 @@ export class GoodsController {
   }
 
   @Get()
-  @GetProductByIdDecorators()
+  @GetAllProductsDecorators()
   async findAll(@Query() query: FindAllGoodsDto) {
     return await this.goodsService.findAll(query);
   }
 
+  @Get('by-user')
+  @GetAllProductsDecorators()
+  async findAllByCurrentUser(
+    @Query() query: FindAllGoodsDto,
+    @CurrentUser() { _id }: IUser,
+  ) {
+    return await this.goodsService.findAll(query, _id);
+  }
+
   @Get(':id')
-  @GetProductDecorators()
+  @GetProductByIdDecorators()
   async findById(@Param('id') id: string) {
     return await this.goodsService.findById(id);
   }

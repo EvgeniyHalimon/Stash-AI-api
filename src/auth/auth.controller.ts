@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Req, Param } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
@@ -8,7 +8,7 @@ import {
   SignInDto,
   CreateUserDto,
 } from './dto';
-import { ICustomRequest } from 'src/shared';
+import { CurrentUser } from 'src/shared';
 import { ITokens } from './auth.types';
 import {
   ConfirmDecorators,
@@ -16,6 +16,7 @@ import {
   RefreshDecorators,
   RegisterDecorators,
 } from './routeDecorators';
+import { IUser } from 'src/users/user.types';
 
 @ApiBearerAuth('bearer')
 @Controller('auth')
@@ -37,8 +38,8 @@ export class AuthController {
 
   @Get('refresh')
   @RefreshDecorators()
-  refresh(@Req() req: ICustomRequest): Promise<ITokens | void> {
-    return this.authService.refresh(req.user._id);
+  refresh(@CurrentUser() { _id }: IUser): Promise<ITokens | void> {
+    return this.authService.refresh(_id);
   }
 
   @Get('confirm/:token')

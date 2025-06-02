@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UsersService } from './user.service';
@@ -9,8 +9,9 @@ import {
   UserPresenter,
 } from './dto';
 
-import { ICustomRequest } from 'src/shared';
+import { CurrentUser } from 'src/shared';
 import { FindAllUsersDecorators, PatchUserDecorators } from './routeDecorators';
+import { IUser } from './user.types';
 
 @ApiBearerAuth('bearer')
 @Controller('users')
@@ -28,11 +29,8 @@ export class UsersController {
   @PatchUserDecorators()
   patch(
     @Body() updateUserDto: PatchUserDto,
-    @Req() req: ICustomRequest,
+    @CurrentUser() { _id }: IUser,
   ): Promise<UserPresenter> {
-    return this.usersService.patch({
-      updateUserDto,
-      userId: req.user._id,
-    });
+    return this.usersService.patch(updateUserDto, _id);
   }
 }

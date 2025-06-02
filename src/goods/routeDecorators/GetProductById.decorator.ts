@@ -10,7 +10,7 @@ const {
   GOODS: { GOODS_NOT_FOUND },
 } = vocabulary;
 
-export function GetProductDecorators() {
+export function GetProductByIdDecorators() {
   return applyDecorators(
     ApiOperation({ summary: 'Get a goods item by id' }),
     ApiResponse({ status: 200, description: 'Return the goods item.' }),

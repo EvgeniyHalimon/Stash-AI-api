@@ -31,25 +31,25 @@ export class NotificationsController {
   }
 
   @DeleteNotificationDecorators()
-  @Delete('/:id')
+  @Delete(':id')
   delete(@Req() request: ICustomRequest, @Param('id') id: string) {
     return this.notificationsService.delete(id, request.user._id);
   }
 
   @ViewAllNotificationsDecorators()
-  @Patch('/view-all')
+  @Patch('view-all')
   viewAll(@Req() request: ICustomRequest) {
     return this.notificationsService.viewAll(request.user._id);
   }
 
   @DeleteAllNotificationsDecorators()
-  @Delete('/delete-all')
+  @Delete('delete-all')
   deleteAll(@Req() request: ICustomRequest) {
     return this.notificationsService.deleteAll(request.user._id);
   }
 
   @AddViewToNotificationsByIdDecorators()
-  @Patch('/add-view/:notificationIds')
+  @Patch('add-view/:notificationIds')
   addViewToNotificationsByIds(
     @Req() request: ICustomRequest,
     @Param('notificationIds') notificationIds: string[],
