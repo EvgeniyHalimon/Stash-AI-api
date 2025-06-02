@@ -9,7 +9,7 @@ export class GetAllGoodPresenter {
     type: [GoodPresenter],
     description: 'Represents array of users.',
   })
-  users: GoodPresenter[];
+  goods: GoodPresenter[];
 
   @ApiProperty({
     type: Number,
@@ -44,7 +44,7 @@ export class GetAllGoodPresenter {
   readonly limit?: number = 10;
 
   constructor(goods: IGoods[], count: number, page: number, limit: number) {
-    this.users = goods.map((user) => new GoodPresenter(user));
+    this.goods = goods.map((good) => new GoodPresenter(good));
     this.count = count;
     this.page = page;
     this.limit = limit;

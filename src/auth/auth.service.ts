@@ -72,7 +72,7 @@ export class AuthService {
       if (!userData) throw new NotFoundException(NOT_FOUND);
       if (!userData.active) throw new BadRequestException(USER_IS_NOT_ACTIVE);
 
-      const { password: hashedPassword, ...user } = userData;
+      const { password: hashedPassword, ...user } = userData.toObject();
 
       const match = await verifyPassword(password, hashedPassword);
       if (!match) throw new BadRequestException(WRONG_PASSWORD);

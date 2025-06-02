@@ -6,35 +6,35 @@ export class UserPresenter {
   @ApiProperty({
     example: 'd0601328-1486-434a-860e-75b843a682db',
     type: String,
-    description: 'Represents id of the author',
+    description: 'Represents id of the user',
   })
   _id: string;
 
   @ApiProperty({
     example: 'John',
     type: String,
-    description: 'Represents first name of the author',
+    description: 'Represents first name of the user',
   })
   firstName: string;
 
   @ApiProperty({
     example: 'Doe',
     type: String,
-    description: 'Represents last name of the author',
+    description: 'Represents last name of the user',
   })
   lastName: string;
 
   @ApiProperty({
     example: 'john.doe@example.com',
     type: String,
-    description: 'Represents email of the author',
+    description: 'Represents email of the user',
   })
   email: string;
 
   @ApiProperty({
     example: 'user',
     type: String,
-    description: 'Represents the role of the author',
+    description: 'Represents the role of the user',
   })
   role: UserRole;
 
@@ -49,14 +49,14 @@ export class UserPresenter {
   @ApiProperty({
     example: '2024-08-14T08:40:32.000Z',
     type: String,
-    description: 'Represents the creation date of the author',
+    description: 'Represents the creation date of the user',
   })
   createdAt: Date;
 
   @ApiProperty({
     example: '2024-08-14T08:40:32.000Z',
     type: String,
-    description: 'Represents the last update date of the author',
+    description: 'Represents the last update date of the user',
   })
   updatedAt: Date;
 

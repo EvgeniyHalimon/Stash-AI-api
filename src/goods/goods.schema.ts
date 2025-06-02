@@ -1,13 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CallbackWithoutResultAndOptionalError, Document } from 'mongoose';
 import { randomUUID } from 'crypto';
+import { updatedAtFieldPlugin } from 'src/shared';
+import { User } from 'src/users/user.schema';
 
 @Schema()
 export class Goods extends Document {
   @Prop({ default: () => randomUUID() })
   _id: string;
 
-  @Prop({ type: String, ref: 'User' })
+  @Prop({ type: String, ref: User.name })
   user: string;
 
   @Prop({ required: true })
@@ -37,10 +39,7 @@ export class Goods extends Document {
 
 export const GoodsSchema = SchemaFactory.createForClass(Goods);
 
-GoodsSchema.pre('save', function (next) {
-  this.updatedAt = new Date();
-  next();
-});
+GoodsSchema.plugin(updatedAtFieldPlugin);
 
 GoodsSchema.pre('findOneAndDelete', async function (next) {
   try {

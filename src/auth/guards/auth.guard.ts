@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Unauthorized');
     }
 
     try {
@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verify(token, { secret });
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Unauthorized');
     }
 
     return true;

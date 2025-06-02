@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Get, Req, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { SignInDto, CreateUserDto } from 'src/users/dto';
@@ -13,6 +13,7 @@ import {
   RegisterDecorators,
 } from './routeDecorators';
 
+@ApiBearerAuth('bearer')
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {

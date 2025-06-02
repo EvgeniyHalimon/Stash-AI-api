@@ -18,7 +18,7 @@ export function LoginDecorators() {
     Public(),
     ApiOperation({ summary: 'Log in an existing user' }),
     ApiResponse({
-      status: HttpStatus.OK,
+      status: HttpStatus.CREATED,
       description: 'User successfully logged in.',
       type: SignInPresenter,
     }),

@@ -7,3 +7,4 @@ export * from './normalize-url.middleware';
 export * from './public.decorator';
 export * from './AllExceptions.filter';
 export * from './mails';
+export * from './mongo';

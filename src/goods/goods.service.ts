@@ -47,7 +47,16 @@ export class GoodsService {
       };
 
       const [items, total] = await Promise.all([
-        this.goodsModel.find().sort(sortOptions).skip(skip).limit(limit).exec(),
+        this.goodsModel
+          .find()
+          .populate({
+            path: 'user',
+            select: '_id firstName lastName email role',
+          })
+          .sort(sortOptions)
+          .skip(skip)
+          .limit(limit)
+          .exec(),
         this.goodsModel.countDocuments().exec(),
       ]);
 
@@ -61,7 +70,13 @@ export class GoodsService {
   async findById(id: string): Promise<IGoods> {
     try {
       await this.findOneOrFail({ _id: id });
-      return await this.goodsModel.findById(id).exec();
+      return await this.goodsModel
+        .findById(id)
+        .populate({
+          path: 'user',
+          select: '_id firstName lastName email role',
+        })
+        .exec();
     } catch (error) {
       this.logger.error(
         `Error finding good by ID: ${id}`,

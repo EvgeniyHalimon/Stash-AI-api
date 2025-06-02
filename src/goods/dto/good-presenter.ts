@@ -1,19 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { IGoods } from '../goods.types';
+import { IUser } from 'src/users/user.types';
+import { userExample } from 'src/users/user.constants';
 
 export class GoodPresenter {
   @ApiProperty({
     example: 'd0601328-1486-434a-860e-75b843a682db',
     type: String,
-    description: 'Represents id of the author',
+    description: 'Represents id of the user',
   })
   _id: string;
 
   @ApiProperty({
+    example: userExample,
     type: String,
-    description: 'Title of the goods',
-    required: true,
+    description: 'Represents user',
+  })
+  user: Partial<IUser>;
+
+  @ApiProperty({
+    type: Object,
+    description: 'User',
     example: 'iPhone 15',
   })
   title: string;
@@ -59,22 +67,24 @@ export class GoodPresenter {
   @ApiProperty({
     example: '2024-08-14T08:40:32.000Z',
     type: String,
-    description: 'Represents the creation date of the author',
+    description: 'Represents the creation date of the user',
   })
   createdAt: Date;
 
   @ApiProperty({
     example: '2024-08-14T08:40:32.000Z',
     type: String,
-    description: 'Represents the last update date of the author',
+    description: 'Represents the last update date of the user',
   })
   updatedAt: Date;
 
   constructor(good: IGoods) {
+    const { _id, firstName, lastName, email, role } = good.user;
     this._id = good._id;
     this.title = good.title;
     this.price = good.price;
     this.category = good.category;
+    this.user = { _id, firstName, lastName, email, role };
     this.postponed = good.postponed;
     this.remainingToBePostponed = good.remainingToBePostponed;
     this.whenWillItEnd = good.whenWillItEnd;

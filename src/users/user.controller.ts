@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch, Query, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UsersService } from './user.service';
 import {
@@ -12,6 +12,7 @@ import {
 import { ICustomRequest } from 'src/shared';
 import { FindAllUsersDecorators, PatchUserDecorators } from './routeDecorators';
 
+@ApiBearerAuth('bearer')
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {

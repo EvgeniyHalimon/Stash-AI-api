@@ -8,7 +8,7 @@ import {
   Query,
   Patch,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GoodsService } from './goods.service';
 import { CreateGoodsDto, FindAllGoodsDto, UpdateGoodsDto } from './dto';
 import {
@@ -19,6 +19,7 @@ import {
 } from './routeDecorators';
 import { DeleteProductDecorators } from './routeDecorators/DeleteProduct.decorator';
 
+@ApiBearerAuth('bearer')
 @ApiTags('goods')
 @Controller('goods')
 export class GoodsController {

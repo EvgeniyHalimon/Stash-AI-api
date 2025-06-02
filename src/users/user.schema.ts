@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import { randomUUID } from 'crypto';
 import { UserRolesEnum } from './user.constants';
 import { Goods } from 'src/goods/goods.schema';
+import { updatedAtFieldPlugin } from 'src/shared';
 
 @Schema()
 export class User extends Document {
@@ -40,10 +41,7 @@ export class User extends Document {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.pre('save', function (next) {
-  this.updatedAt = new Date();
-  next();
-});
+UserSchema.plugin(updatedAtFieldPlugin);
 
 UserSchema.pre('findOneAndDelete', async function (next) {
   try {
