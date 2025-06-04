@@ -42,13 +42,7 @@ export class GoodsService {
     user?: string,
   ): Promise<GetAllGoodPresenter> {
     try {
-      const {
-        sort = 'desc',
-        sortBy = 'createdAt',
-        page = 1,
-        limit = 10,
-      } = queryParams;
-      const skip = (page - 1) * limit;
+      const { sort = 'desc', sortBy = 'createdAt', page, limit } = queryParams;
 
       const sortOptions: Record<string, SortOrder> = {
         [sortBy]: sort === 'asc' ? 1 : -1,
@@ -56,21 +50,25 @@ export class GoodsService {
 
       const filter: Record<string, any> = user ? { user } : {};
 
+      const query = this.goodsModel
+        .find(filter)
+        .populate({
+          path: 'user',
+          select: '_id firstName lastName email role',
+        })
+        .sort(sortOptions);
+
+      if (page && limit) {
+        const skip = (page - 1) * limit;
+        query.skip(skip).limit(limit);
+      }
+
       const [items, total] = await Promise.all([
-        this.goodsModel
-          .find(filter)
-          .populate({
-            path: 'user',
-            select: '_id firstName lastName email role',
-          })
-          .sort(sortOptions)
-          .skip(skip)
-          .limit(limit)
-          .exec(),
+        query.exec(),
         this.goodsModel.countDocuments(filter).exec(),
       ]);
 
-      return new GetAllGoodPresenter(items, total, page, limit);
+      return new GetAllGoodPresenter(items, total, page ?? 1, limit ?? total);
     } catch (error) {
       this.logger.error('Error retrieving goods', error.stack || error.message);
       throw new InternalServerErrorException('Failed to retrieve goods');
