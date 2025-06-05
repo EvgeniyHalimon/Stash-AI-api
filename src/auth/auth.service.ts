@@ -102,7 +102,7 @@ export class AuthService {
     try {
       const user = await this.userService.findOne({ _id });
       if (!user) throw new NotFoundException(NOT_FOUND);
-      return this.generateTokens(user);
+      return this.generateTokens(user.toObject());
     } catch (error) {
       this.logger.error(
         'Error during token refresh',

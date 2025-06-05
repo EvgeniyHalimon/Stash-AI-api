@@ -35,7 +35,7 @@ export class FindAllGoodsDto {
     default: 1,
     example: 1,
   })
-  readonly page?: number = 1;
+  readonly page?: number;
 
   @IsNumber()
   @IsOptional()
@@ -48,5 +48,5 @@ export class FindAllGoodsDto {
     default: 10,
     example: 10,
   })
-  readonly limit?: number = 10;
+  readonly limit?: number;
 }
