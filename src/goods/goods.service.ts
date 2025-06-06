@@ -42,13 +42,33 @@ export class GoodsService {
     user?: string,
   ): Promise<GetAllGoodPresenter> {
     try {
-      const { sort = 'desc', sortBy = 'createdAt', page, limit } = queryParams;
+      const {
+        sort = 'desc',
+        sortBy = 'createdAt',
+        page,
+        limit,
+        date,
+      } = queryParams;
 
       const sortOptions: Record<string, SortOrder> = {
         [sortBy]: sort === 'asc' ? 1 : -1,
       };
 
       const filter: Record<string, any> = user ? { user } : {};
+
+      if (date) {
+        const targetDate = new Date(`${date}T00:00:00.000Z`);
+        const year = targetDate.getUTCFullYear();
+        const month = targetDate.getUTCMonth();
+
+        const firstDay = new Date(Date.UTC(year, month, 1));
+        const lastDay = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
+
+        filter.whenWillItEnd = {
+          $gte: firstDay,
+          $lte: lastDay,
+        };
+      }
 
       const query = this.goodsModel
         .find(filter)

@@ -1,6 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsNumber,
+  Min,
+  Max,
+  IsDateString,
+} from 'class-validator';
 import { GoodsSortBy } from '../goods.types';
 import { SortOrder } from 'src/shared';
 
@@ -49,4 +56,13 @@ export class FindAllGoodsDto {
     example: 10,
   })
   readonly limit?: number;
+
+  @IsOptional()
+  @IsDateString()
+  @ApiPropertyOptional({
+    type: String,
+    description: 'Filter goods by date',
+    example: '2025-05-30',
+  })
+  readonly date?: string;
 }
