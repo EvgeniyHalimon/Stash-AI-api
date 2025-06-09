@@ -11,6 +11,11 @@ import {
 import { GoodsSortBy } from '../goods.types';
 import { SortOrder } from 'src/shared';
 
+enum DateRangeType {
+  MONTH = 'month',
+  DAY = 'day',
+}
+
 export class FindAllGoodsDto {
   @IsEnum(SortOrder)
   @IsOptional()
@@ -62,7 +67,17 @@ export class FindAllGoodsDto {
   @ApiPropertyOptional({
     type: String,
     description: 'Filter goods by date',
-    example: '2025-05-30',
+    example: '2025-06-09',
   })
   readonly date?: string;
+
+  @IsOptional()
+  @IsEnum(DateRangeType)
+  @ApiPropertyOptional({
+    enum: DateRangeType,
+    description: 'Whether to filter by day or month',
+    default: DateRangeType.MONTH,
+    example: DateRangeType.DAY,
+  })
+  readonly range?: DateRangeType = DateRangeType.MONTH;
 }

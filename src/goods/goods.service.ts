@@ -48,6 +48,7 @@ export class GoodsService {
         page,
         limit,
         date,
+        range = 'month',
       } = queryParams;
 
       const sortOptions: Record<string, SortOrder> = {
@@ -58,15 +59,24 @@ export class GoodsService {
 
       if (date) {
         const targetDate = new Date(`${date}T00:00:00.000Z`);
-        const year = targetDate.getUTCFullYear();
-        const month = targetDate.getUTCMonth();
 
-        const firstDay = new Date(Date.UTC(year, month, 1));
-        const lastDay = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
+        let from: Date;
+        let to: Date;
+
+        if (range === 'day') {
+          from = new Date(targetDate);
+          to = new Date(targetDate);
+          to.setUTCHours(23, 59, 59, 999);
+        } else {
+          const year = targetDate.getUTCFullYear();
+          const month = targetDate.getUTCMonth();
+          from = new Date(Date.UTC(year, month, 1));
+          to = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
+        }
 
         filter.whenWillItEnd = {
-          $gte: firstDay,
-          $lte: lastDay,
+          $gte: from,
+          $lte: to,
         };
       }
 
