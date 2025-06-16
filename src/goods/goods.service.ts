@@ -27,9 +27,9 @@ export class GoodsService {
     private readonly goodsModel: Model<IGoods>,
   ) {}
 
-  async create(goodsDto: Partial<IGoods>): Promise<IGoods> {
+  async create(goodsDto: Partial<IGoods>, _id: string): Promise<IGoods> {
     try {
-      const newGoods = new this.goodsModel(goodsDto);
+      const newGoods = new this.goodsModel({ user: _id, ...goodsDto });
       return await newGoods.save();
     } catch (error) {
       this.logger.error('Error creating goods', error.stack || error.message);

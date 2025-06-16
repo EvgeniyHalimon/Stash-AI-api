@@ -15,19 +15,19 @@ export class Goods extends Document {
   @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ type: Number })
   price: number;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   category: string;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   postponed: number;
 
-  @Prop()
+  @Prop({ type: Number })
   remainingToBePostponed: number;
 
-  @Prop()
+  @Prop({ type: Date })
   whenWillItEnd: Date;
 
   @Prop({ default: () => new Date() })

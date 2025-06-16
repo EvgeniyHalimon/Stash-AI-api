@@ -10,6 +10,7 @@ import { EventsModule } from './events/events.module';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { NormalizeUrlMiddleware } from './shared';
+import { PostponementHistoryModule } from './postponement-history/postponement-history.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { NormalizeUrlMiddleware } from './shared';
         limit: 10,
       },
     ]),
+    PostponementHistoryModule,
   ],
 })
 export class AppModule {

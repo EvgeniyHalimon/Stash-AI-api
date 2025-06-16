@@ -29,8 +29,11 @@ export class GoodsController {
 
   @Post()
   @CreateProductDecorators()
-  async create(@Body() goodsDto: CreateGoodsDto) {
-    return await this.goodsService.create(goodsDto);
+  async create(
+    @Body() goodsDto: CreateGoodsDto,
+    @CurrentUser() { _id }: IUser,
+  ) {
+    return await this.goodsService.create(goodsDto, _id);
   }
 
   @Get()
