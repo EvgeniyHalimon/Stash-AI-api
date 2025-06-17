@@ -5,10 +5,15 @@ import { GoodsSchema } from './goods/goods.schema';
 import { NotificationsSchema } from './notifications/notifications.schema';
 import { UserRolesEnum } from './users/user.constants';
 import { UserSchema } from './users/user.schema';
+import { PostponementHistorySchema } from './postponement-history/postponement-history.schema';
 
 const UserModel = model('User', UserSchema);
 const GoodsModel = model('Goods', GoodsSchema);
 const NotificationModel = model('Notification', NotificationsSchema);
+const PostponementHistoryModel = model(
+  'PostponementHistory',
+  PostponementHistorySchema,
+);
 
 const MONGO_URI = 'mongodb://localhost:27017/stash';
 
@@ -22,6 +27,7 @@ async function seed() {
       UserModel.deleteMany({}),
       GoodsModel.deleteMany({}),
       NotificationModel.deleteMany({}),
+      PostponementHistoryModel.deleteMany({}),
     ]);
 
     const users = await Promise.all([
@@ -49,6 +55,14 @@ async function seed() {
       createGoods(users[1]._id, 'Jacket', 120, 60, 0, 'clothing'),
       createGoods(users[0]._id, 'Tablet', 500, 250, 0, 'electronics'),
       createGoods(users[1]._id, 'Cap', 15, 5, 0, 'accessories'),
+    ]);
+
+    await Promise.all([
+      createHistory(users[0]._id, goods[0]._id, 100),
+      createHistory(users[0]._id, goods[0]._id, 200),
+      createHistory(users[1]._id, goods[1]._id, 5),
+      createHistory(users[1]._id, goods[1]._id, 10),
+      createHistory(users[0]._id, goods[2]._id, 300),
     ]);
 
     await Promise.all([
@@ -114,6 +128,14 @@ function createNotification(userId: string, text: string, goodsId?: string) {
     user: userId,
     goods: goodsId,
     text,
+  });
+}
+
+function createHistory(userId: string, goodsId: string, amount: number) {
+  return PostponementHistoryModel.create({
+    user: userId,
+    goods: goodsId,
+    amount,
   });
 }
 

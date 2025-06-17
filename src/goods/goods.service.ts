@@ -163,6 +163,7 @@ export class GoodsService {
   async delete(id: string): Promise<IGoods | null> {
     try {
       await this.findOneOrFail({ _id: id });
+      await this.history.deleteManyGoods(id);
       return await this.goodsModel.findByIdAndDelete(id).exec();
     } catch (error) {
       this.logger.error(

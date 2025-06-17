@@ -63,7 +63,7 @@ export class PostponementHistoryService {
       // year range
       const year = new Date().getUTCFullYear();
       const from = new Date(Date.UTC(year, 0, 1));
-      const to = new Date(Date.UTC(year, 11, 0, 23, 59, 59, 999));
+      const to = new Date(Date.UTC(year + 1, 0, 0, 23, 59, 59, 999));
 
       filter.createdAt = {
         $gte: from,
@@ -76,5 +76,19 @@ export class PostponementHistoryService {
       .sort({ createdAt: -1 });
 
     return new GetAllHistoryPresenter(query);
+  }
+
+  async deleteManyGoods(_id: string) {
+    try {
+      return this.postponementHistory.deleteMany({ _id });
+    } catch (error) {
+      this.logger.error(
+        'Error deleting postponement history',
+        error.stack || error.message,
+      );
+      throw new InternalServerErrorException(
+        'Failed to delete postponement history',
+      );
+    }
   }
 }
