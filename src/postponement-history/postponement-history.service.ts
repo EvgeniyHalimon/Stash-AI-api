@@ -20,8 +20,7 @@ export class PostponementHistoryService {
 
   async create(historyData: Partial<IPostponementHistory>) {
     try {
-      const history = new this.postponementHistory(historyData);
-      return await history.save();
+      return await this.postponementHistory.create(historyData);
     } catch (error) {
       this.logger.error(
         'Error creating postponement history',
