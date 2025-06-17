@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PostponementHistoryService } from './postponement-history.service';
 import { FindAllHistoryDto } from './dto';
@@ -13,9 +13,9 @@ export class PostponementHistoryController {
 
   @Get()
   async getAll(
-    @Body() historyDto: FindAllHistoryDto,
+    @Query() query: FindAllHistoryDto,
     @CurrentUser() { _id }: IUser,
   ) {
-    return await this.historyService.findAll(historyDto, _id);
+    return await this.historyService.findAll(query, _id);
   }
 }

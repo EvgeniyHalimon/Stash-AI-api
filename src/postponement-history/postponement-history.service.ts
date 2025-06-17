@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PostponementHistory } from './postponement-history.schema';
 import { Model } from 'mongoose';
 import { IPostponementHistory } from './postponement-history.types';
-import { FindAllHistoryDto, GetAllHistoryPresenter } from './dto';
+import { FindAllHistoryDto } from './dto';
 
 @Injectable()
 export class PostponementHistoryService {
@@ -74,7 +74,22 @@ export class PostponementHistoryService {
       .find(filter)
       .sort({ createdAt: -1 });
 
-    return new GetAllHistoryPresenter(query);
+    const grouped: Record<string, number> = {};
+
+    for (const item of query) {
+      const dateKey = item.createdAt.toISOString().split('T')[0];
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = 0;
+      }
+      grouped[dateKey] += item.amount;
+    }
+
+    const result = Object.entries(grouped).map(([date, amount]) => ({
+      date,
+      amount,
+    }));
+
+    return result;
   }
 
   async deleteManyGoods(_id: string) {

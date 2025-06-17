@@ -24,5 +24,5 @@ export class FindAllHistoryDto {
     default: DateRangeType.MONTH,
     example: DateRangeType.DAY,
   })
-  readonly range?: DateRangeType = DateRangeType.MONTH;
+  readonly range?: DateRangeType;
 }
