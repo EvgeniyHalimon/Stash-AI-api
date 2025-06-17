@@ -5,7 +5,7 @@ import { IPostponementHistory } from '../postponement-history.types';
 export class GetAllHistoryPresenter {
   @ApiProperty({
     type: [HistoryPresenter],
-    description: 'Represents array of users.',
+    description: 'Represents array of history.',
   })
   goods: HistoryPresenter[];
 

@@ -59,8 +59,12 @@ export class GoodsController {
 
   @Patch(':id')
   @PatchDecorators()
-  async update(@Param('id') id: string, @Body() updateDto: UpdateGoodsDto) {
-    return await this.goodsService.update(id, updateDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateGoodsDto,
+    @CurrentUser() { _id }: IUser,
+  ) {
+    return await this.goodsService.update(id, updateDto, _id);
   }
 
   @Delete(':id')

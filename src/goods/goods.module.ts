@@ -20,6 +20,7 @@ import {
       { name: User.name, schema: UserSchema },
       { name: PostponementHistory.name, schema: PostponementHistorySchema },
     ]),
+    PostponementHistory,
   ],
   exports: [GoodsService],
 })

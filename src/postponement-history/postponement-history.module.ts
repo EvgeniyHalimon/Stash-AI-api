@@ -15,5 +15,6 @@ import {
       { name: PostponementHistory.name, schema: PostponementHistorySchema },
     ]),
   ],
+  exports: [PostponementHistoryService],
 })
 export class PostponementHistoryModule {}

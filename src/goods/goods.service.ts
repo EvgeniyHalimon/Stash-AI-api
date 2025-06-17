@@ -13,6 +13,7 @@ import { Goods } from './goods.schema';
 import { CreateGoodsDto, FindAllGoodsDto, GetAllGoodPresenter } from './dto';
 
 import { vocabulary } from 'src/shared';
+import { PostponementHistoryService } from 'src/postponement-history/postponement-history.service';
 
 const {
   GOODS: { GOODS_NOT_FOUND },
@@ -25,6 +26,7 @@ export class GoodsService {
   constructor(
     @InjectModel(Goods.name)
     private readonly goodsModel: Model<IGoods>,
+    private readonly history: PostponementHistoryService,
   ) {}
 
   async create(goodsDto: Partial<IGoods>, _id: string): Promise<IGoods> {
@@ -129,9 +131,20 @@ export class GoodsService {
   async update(
     _id: string,
     updateDto: Partial<IGoods>,
+    user: string,
   ): Promise<IGoods | null> {
+    const { postponed } = updateDto;
     try {
-      await this.findOneOrFail({ _id });
+      const good = await this.findOneOrFail({ _id });
+      const difference = postponed - good.postponed;
+
+      if (postponed && difference !== 0) {
+        await this.history.create({
+          user,
+          goods: good._id,
+          amount: difference,
+        });
+      }
 
       return await this.goodsModel
         .findByIdAndUpdate(_id, updateDto, { new: true })
