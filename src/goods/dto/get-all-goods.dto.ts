@@ -9,12 +9,7 @@ import {
   IsDateString,
 } from 'class-validator';
 import { GoodsSortBy } from '../goods.types';
-import { SortOrder } from 'src/shared';
-
-enum DateRangeType {
-  MONTH = 'month',
-  DAY = 'day',
-}
+import { DateRangeType, SortOrder } from 'src/shared';
 
 export class FindAllGoodsDto {
   @IsEnum(SortOrder)

@@ -4,6 +4,7 @@ import { PostponementHistoryService } from './postponement-history.service';
 import { FindAllHistoryDto } from './dto';
 import { CurrentUser } from 'src/shared';
 import { IUser } from 'src/users/user.types';
+import { FindAllHistoryDecorators } from './routeDecorators';
 
 @ApiBearerAuth('bearer')
 @ApiTags('history')
@@ -12,6 +13,7 @@ export class PostponementHistoryController {
   constructor(private readonly historyService: PostponementHistoryService) {}
 
   @Get()
+  @FindAllHistoryDecorators()
   async getAll(
     @Query() query: FindAllHistoryDto,
     @CurrentUser() { _id }: IUser,

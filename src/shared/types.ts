@@ -16,3 +16,8 @@ export enum SortOrder {
   ASC = 'asc',
   DESC = 'desc',
 }
+
+export enum DateRangeType {
+  MONTH = 'month',
+  DAY = 'day',
+}

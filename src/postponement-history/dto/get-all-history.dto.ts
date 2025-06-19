@@ -1,10 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsDateString } from 'class-validator';
-
-enum DateRangeType {
-  MONTH = 'month',
-  DAY = 'day',
-}
+import { DateRangeType } from 'src/shared';
 
 export class FindAllHistoryDto {
   @IsOptional()
